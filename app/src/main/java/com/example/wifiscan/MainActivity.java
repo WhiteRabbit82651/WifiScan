@@ -18,7 +18,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d("WifiScan","configuredNetworks size = " + configuredNetworks.size());
 
         List<ScanResult> results = wifiManager.getScanResults();
-        ArrayList list = new ArrayList<>();
+        ArrayList<String> list = new ArrayList<>();
         for (ScanResult s: results) {
             Log.d("WifiScan",s.SSID);
 
@@ -101,23 +100,20 @@ public class MainActivity extends AppCompatActivity {
         // ListViewにArrayAdapterを設定する
         ListView listView = (ListView)findViewById(R.id.listView);
         listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            //リスト項目クリック時の処理
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // ここに処理を記述します。
-                //今回は、トースト表示
-                ListView listView =(ListView)parent;
-                String item=(String)listView.getItemAtPosition(position);
-                //Toast.makeText(MainActivity.this, "Click: "+item, Toast.LENGTH_SHORT).show();
+        //リスト項目クリック時の処理
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            // ここに処理を記述します。
+            //今回は、トースト表示
+            ListView listView1 =(ListView)parent;
+            String item=(String) listView1.getItemAtPosition(position);
+            //Toast.makeText(MainActivity.this, "Click: "+item, Toast.LENGTH_SHORT).show();
 
-                // サブ画面へ遷移
-                Intent intent = new Intent(getApplication(), SubActivity.class);
-                intent.putExtra("ssid", item.split("_")[0]);
-                intent.putExtra("encryptType", item.split("_")[1]);
-                intent.putExtra("bssid", item.split("_")[2]);
-                startActivity(intent);
-            }
+            // サブ画面へ遷移
+            Intent intent = new Intent(getApplication(), SubActivity.class);
+            intent.putExtra("ssid", item.split("_")[0]);
+            intent.putExtra("encryptType", item.split("_")[1]);
+            intent.putExtra("bssid", item.split("_")[2]);
+            startActivity(intent);
         });
     }
     private void scanFailure() {
